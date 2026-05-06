@@ -1,0 +1,27 @@
+11a. Programming example for MySQLin Docker
+MySQL — SQL Commands in CLI
+Step 1: Start MySQL on Killercoda
+
+docker run --name mysql-test -e MYSQL_ROOT_PASSWORD=root -d -p 3306:3306 mysql
+
+Step 2: Enter MySQL CLI
+
+docker exec -it mysql-test mysql -uroot -proot
+
+Step 3: Run SQL Commands (directly in terminal)
+
+CREATE DATABASE testdb;
+USE testdb;
+CREATE TABLE users (
+id VARCHAR(10) PRIMARY KEY,
+name VARCHAR(50),
+age INT
+);
+
+//Now Insert The values :
+
+INSERT INTO users VALUES ('u001', 'Alice', 30);
+INSERT INTO users VALUES ('u002', 'Bob', 25);
+
+Now Display the table contents:
+SELECT * FROM users;
