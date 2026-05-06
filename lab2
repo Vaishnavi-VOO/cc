@@ -1,0 +1,114 @@
+2. Getting Started with Cloud Shell and gcloud:
+What is Cloud Shell?
+Cloud Shell is a browser-based command-line environment provided by Google Cloud.
+Go to google cloud console → authorize with your gmail credentials
+→ search for cloud shell from search bar and select → open terminal
+once cloud shell is selected → execute the followings commands
+***
+
+mkdir demo
+cd demo
+echo "Hello Cloud Shell" > hello.txt
+cat hello.txt
+chmod +x hello.txt
+ls -l
+
+cd ..
+
+File & Directory Management
+mkdir test # Create directory
+rmdir test # Delete empty directory
+rm file.txt # Delete file
+rm -r folder # Delete folder recursively
+cp a.txt b.txt # Copy file
+mv a.txt folder/ # Move or rename file
+
+Viewing & Editing Files
+cat file.txt # View file content
+less file.txt # Scroll view
+head file.txt # First 10 lines
+tail file.txt # Last 10 lines
+nano file.txt # Simple editor
+vi file.txt # Advanced editor
+
+System Information
+
+whoami # Current user
+uname -a # OS details
+df -h # Disk usage
+du -sh * # Folder sizes
+free -h # Memory usage
+uptime # System running time
+
+Environment Variables & Shell
+env # List environment variables
+echo $HOME # Print variable
+export MYVAR=123 # Set variable
+history # Command history
+clear # Clear terminal
+
+Next step is exploring the gcloud commands
+***
+Basic gcloud Configuration
+
+1. Check active account
+gcloud auth list
+
+2. Check active project
+gcloud config list project
+
+3. Get help
+gcloud help
+gcloud compute --help
+
+4. List projects
+gcloud projects list
+
+Using Cloud Shell Editor
+Cloud Shell also includes a code editor.
+Open it using:
+cloudshell edit a.txt
+
+//# a file will be opened named a.txt on editor; you
+add text to it; go back to terminal and check its
+content using
+
+cat a.txt
+Note: You may execute various programming files/codes as well
+
+For Example:
+cloudshell edit test.py
+
+From terminal you can execute the file as follows:
+python3 test.py
+
+Compute Engine (VMs) // Works only with Billing
+1. List VM instances
+gcloud compute instances list
+
+2. Create a VM
+gcloud compute instances create my-vm \
+--zone=us-central1-a
+
+3. Delete a VM
+
+gcloud compute instances delete my-vm \
+--zone=us-central1-a
+
+🔹 Cloud Storage // Works only with billing
+1. List buckets
+gcloud storage buckets list
+
+2. Create a bucket
+gcloud storage buckets create gs://my-bucket-name
+
+🔹 App Engine
+3. Deploy app
+gcloud app deploy
+
+4. View app
+gcloud app browse
+
+🔹 IAM (Permissions)
+List service accounts
+gcloud iam service-accounts list
