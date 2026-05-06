@@ -1,0 +1,138 @@
+9. Orchestrating Serverless Functions with
+AWS Step Functions - simulation in
+Docker
+
+Go to killercoda.com select docker followed by build an image and perform
+the following tasks
+
+Step 1: Create Folders and Basic Files
+📂 1. Create project folder and move into it
+mkdir project
+cd project
+2. Create subfolders for:
+● input (where you upload the source image)
+● output (where resized and watermarked images will be saved)
+● resize (for first container: resize image)
+● watermark (for second container: add watermark)
+
+mkdir input output resize watermark
+
+Now your folder tree looks like this:
+
+/project
+
+/input
+/output
+/resize
+/watermark
+
+📄 3. Create resize/app.py file
+cd resize
+vi app.py
+
+Type this Python code inside: (press i to insert)
+
+from PIL import Image
+import os
+input_path = '/data/input/image.jpg'
+output_path = '/data/output/resized.jpg'
+print("Resizing image...")
+image = Image.open(input_path)
+image = image.resize((300, 300))
+image.save(output_path)
+print("Image resized and saved!")
+📄 4. Create resize/Dockerfile
+vi Dockerfile
+
+Type this inside:
+(press i to insert)
+FROM python:3.11-slim
+RUN pip install pillow
+WORKDIR /app
+COPY app.py .
+CMD ["python", "app.py"]
+
+Save and exit. (Press ESC, :wq)
+
+📄 5. Now set up watermark/app.py
+Go back to project root:
+
+cd ../watermark
+(or )
+cd ..
+cd watermark
+Now create another python file here.
+vi app.py
+
+Type this python code:
+
+from PIL import Image, ImageDraw, ImageFont
+import os
+input_path = '/data/output/resized.jpg'
+
+output_path = '/data/output/watermarked.jpg'
+print("Adding watermark...")
+image = Image.open(input_path)
+draw = ImageDraw.Draw(image)
+font = ImageFont.load_default()
+draw.text((50, 50), "Sample Watermark", fill=(0, 255, 128), font=font)
+image.save(output_path)
+print("Watermarked image saved!")
+
+Save and exit. (ESC, :wq)
+
+📄 6. Create watermark/Dockerfile
+You are inside the project/watermark ; Now create a Dockerfile here.
+vi Dockerfile
+
+Type this:
+
+FROM python:3.11-slim
+RUN pip install pillow
+WORKDIR /app
+COPY app.py .
+CMD ["python", "app.py"]
+
+Save and exit.
+
+✅ Now your full structure looks like this:
+
+/project
+/input/
+/output/
+/resize/
+app.py
+Dockerfile
+/watermark/
+app.py
+Dockerfile
+
+Now Build Containers:
+
+Build Containers
+In your Play-with-Docker terminal:
+
+cd /project
+{
+OR just type:
+cd ..
+This will take you to /projects }
+# Build resize container
+docker build -t resize-image ./resize
+# Build watermark container
+docker build -t watermark-image ./watermark
+
+Now add the image: Type the following command:
+
+wget -O input/image.jpg https://picsum.photos/600/400
+
+Run Containers in Sequence (simulate Step Functions)
+# Resize the image
+docker run --rm -v $(pwd)/input:/data/input -v
+$(pwd)/output:/data/output resize-image
+# Watermark the resized image
+docker run --rm -v $(pwd)/input:/data/input -v
+$(pwd)/output:/data/output watermark-image
+
+Now run the following Command:
+python3 -m http.server 8080
