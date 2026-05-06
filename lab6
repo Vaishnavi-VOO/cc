@@ -1,0 +1,35 @@
+6. Migrating a web application to Docker Container
+
+Step 1: Go to https://killercoda.com/docker/scenario/container-build and login using google credentials
+You may use the below 2 commands only if you face issues while running the
+docker image;
+[ To stop and remove the previously built image:
+docker stop $(docker ps -aq)
+docker rm $(docker ps -aq)
+
+Step 2: Now Create 2 files ; app.py and Dockerfile
+vi app.py
+from flask import Flask
+app = Flask(__name__)
+@app.route('/')
+def home():
+    return "Hello Docker from Killercoda!"
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
+
+***
+vi Dockerfile
+FROM python:3.10-slim
+WORKDIR /app
+COPY app.py .
+RUN pip install flask
+EXPOSE 8080
+CMD ["python3", "app.py"]
+
+Step 3: Build Image
+docker build -t flask-webapp .
+
+Step 4: Run the Container
+docker run -d -p 8080:8080 flask-webapp
+
+Click on 8080 and You will get the following message on the browser:
