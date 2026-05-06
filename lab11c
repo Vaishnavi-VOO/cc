@@ -1,0 +1,95 @@
+11c. MySQL in Docker : Complex Expt with multiple
+tables and ‘select from where’ queries
+
+Step 1: Start MySQL Container
+docker run --name mysql1 -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d mysql:8
+
+Step 2: Connect to the Running MySQL
+
+docker exec -it mysql1 mysql -uroot -proot
+
+Now you’ll see a prompt like:
+shell
+mysql>
+
+Step 3: Create a New Database
+Inside MySQL CLI type the following commands:
+CREATE DATABASE shop;
+USE shop;
+
+Now Database ‘shop’ is created and selected.
+Step 4: Create Two Tables
+CREATE TABLE customers (
+id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100),
+city VARCHAR(100)
+);
+
+CREATE TABLE orders (
+id INT AUTO_INCREMENT PRIMARY KEY,
+customer_id INT,
+product VARCHAR(100),
+amount INT,
+FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+Note:1. Here customers and orders tables are created with foreign key relationships.
+
+2. AUTO_INCREMENT automatically generates a unique value for a column when a new row is
+inserted — typically used for primary key columns, like id.
+
+Step 5: Insert Some Sample Data
+
+INSERT INTO customers (name, city) VALUES
+('Alice', 'New York'),
+('Bob', 'Chicago'),
+('Charlie', 'Los Angeles');
+INSERT INTO orders (customer_id, product, amount) VALUES
+(1, 'Laptop', 1200),
+(1, 'Mouse', 25),
+(2, 'Phone', 800),
+(3, 'Tablet', 300),
+(2, 'Keyboard', 45);
+
+Step 6: Run Complex SELECT Queries
+A. Find All Orders for "Alice"
+
+SELECT o.id, o.product, o.amount
+FROM orders o
+JOIN customers c ON o.customer_id = c.id
+WHERE c.name = 'Alice';
+
+B. Find Orders With Amount Greater Than 500
+SELECT c.name, o.product, o.amount
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+WHERE o.amount > 500;
+C. Find Customers Who Didn't Order Anything
+SELECT name
+FROM customers
+WHERE id NOT IN (SELECT DISTINCT customer_id FROM orders);
+
+D. Show Total Spend Per Customer
+SELECT c.name, SUM(o.amount) AS total_spent
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+GROUP BY c.name
+ORDER BY total_spent DESC;
+
+Quick View of the Tables
+If you ever want to see table structure:
+
+DESCRIBE customers;
+DESCRIBE orders;
+
+And to view all data:
+SELECT * FROM customers;
+SELECT * FROM orders;
+Deletion of Table entry:
+DELETE FROM customers WHERE city = 'Chicago';
+Dropping a table:
+DROP TABLE orders;
+
+
+
+
