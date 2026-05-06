@@ -1,0 +1,52 @@
+Objectives
+Demonstrate how Google Cloud Pub/Sub facilitates real-time messaging and
+communication between distributed applications by:
+1.Creating a Pub/Sub topic
+2.Creating a subscription
+3.Publishing messages to the topic
+4.Receiving messages from the subscription
+
+Step 1: Enable Pub/Sub API
+Before using Pub/Sub, enable its API:
+
+gcloud services enable pubsub.googleapis.com
+
+Step 2: Create a Pub/Sub Topic
+gcloud pubsub topics create my-topic
+
+Step 3: Create a Subscription
+gcloud pubsub subscriptions create my-subscription --topic=my-topic
+
+● Messages published to my-topic will be delivered to
+my-subscription.
+
+Step 4: Publish a Message
+Send a test message to the topic:
+
+gcloud pubsub topics publish my-topic --message="Hello, Pub/Sub!"
+
+Step 5: Receive Messages
+Fetch messages from the subscription:
+
+gcloud pubsub subscriptions pull my-subscription
+--auto-ack
+
+● --auto-ack: Acknowledges message receipt, so it is removed
+from the queue.
+
+Step 6: Simulate Real-Time Messaging
+Run the following commands in two separate terminals:
+Terminal 1: Continuous Subscriber (Listening)
+
+gcloud pubsub subscriptions pull my-subscription --auto-ack --limit=10
+
+Terminal 2: Publisher (Sending Messages)
+gcloud pubsub topics publish my-topic --message="Message 1"
+gcloud pubsub topics publish my-topic --message="Message 2"
+
+Step 7: Clean Up Resources
+To avoid billing charges, delete the topic and subscription:
+
+gcloud pubsub subscriptions delete my-subscription
+
+gcloud pubsub topics delete my-topic
